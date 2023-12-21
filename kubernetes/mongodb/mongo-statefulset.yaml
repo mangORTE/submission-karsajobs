@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  labels:
+    run: mongo
+spec:
+  selector:
+    matchLabels:
+      run: mongo
+  serviceName: mongo-service
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        run: mongo
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mongodb
+        image: mongo:4.4.6    # The latest version that can work WITHOUT AVX
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME_FILE
+          value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+          value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+        ports:
+        - containerPort: 27017
+          name: mongo
+        volumeMounts:
+        - name: mongo-persistent-storage
+          mountPath: /data/db
+        - name: config-mount
+          mountPath: /config
+        - name: secret-mount
+          mountPath: /etc/mongo-credentials          
+      volumes:
+      - name: secret-mount
+        secret:
+          secretName: mongo-secret
+      - name: config-mount
+        configMap:
+          name: mongo-configmap
+          items:
+            - key: mongo.conf
+              path: mongo.conf
+      - name: mongo-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongo-pvc

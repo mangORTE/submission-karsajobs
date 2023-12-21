@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs-ui
+  labels:
+    app: karsajobs-ui
+spec:
+  selector:
+    matchLabels:
+      run: karsajobs-ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: karsajobs-ui
+    spec:
+      containers:
+      - name: karsajobs-ui
+        image: ghcr.io/mangorte/karsajobs_ui:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: VUE_APP_BACKEND
+          value: http://192.168.49.2:30010
+      imagePullSecrets:
+      - name: githubreg
