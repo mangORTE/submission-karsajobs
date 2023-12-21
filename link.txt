@@ -1,6 +1,8 @@
-
 # Karsajobs_ui (Frontend)
 https://github.com/users/mangORTE/packages/container/package/karsajobs_ui
 
 # Karsajobs (Backend)
 https://github.com/users/mangORTE/packages/container/package/karsajobs
+
+# https://github.com/mangORTE/submission-karsajobs
+# https://github.com/mangORTE/a433-microservices
